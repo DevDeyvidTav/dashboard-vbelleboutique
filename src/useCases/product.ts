@@ -1,9 +1,21 @@
-import { Product } from "@prisma/client"
 import axios from "axios"
 
-
+export interface Product {
+    name: string,
+    price: number,
+    description: string,
+    imageUrl: string,
+    categoryId: string
+}
 
 
 export async function createProduct(product: Product){
-    const response = await axios.post('/product', product)
+    try {
+        const response = await axios.post('/api/product', product)
+        return response
+    } catch (error) {
+        if (error instanceof axios.AxiosError) {
+            console.error(error.response?.data.message)
+        }
+    }
 }

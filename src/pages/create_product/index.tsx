@@ -1,4 +1,5 @@
 import { storage } from '@/lib/firebase';
+import { createProduct } from '@/useCases/product';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
@@ -9,7 +10,7 @@ const montSerrat = Montserrat({ subsets: ['latin'] });
 export default function Home() {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('26c280db-c100-45ab-87b0-7e1ddb0e63e8');
   const [description, setDescription] = useState('');
   const [imagePreview, setImagePreview] = useState<string>();
   const [imgUrl, setImgUrl] = useState("")
@@ -48,16 +49,31 @@ export default function Home() {
       }
     )
   }
-  const handleSubmit = (e: any) => {
+ 
+  const handleProductRegister = async (e: any) => {
     e.preventDefault()
-
+    handleUpload(e)
+    if (!imagePreview) {
+      alert ('por favor, selecione uma imagem para o produto')
+    }
+    const product = {
+      name: productName,
+      imageUrl: imgUrl,
+      description: description,
+      price: Number(price),
+      categoryId: category
+    }
+   if (imgUrl) {
+    const response = await createProduct(product)
+    return response
+  }
   }
   return (
     <main className={`bg-[#f0e7db] min-h-screen flex flex-col justify-center items-center ${montSerrat.className}`}>
     <div className='flex flex-col items-center space-y-8'>
       <h2 className='text-[#955764] text-2xl font-bold mb-4 uppercase'>Cadastro de Produtos</h2>
     </div>
-    <form onSubmit={handleUpload} className='w-[90%] max-w-sm mt-8'>
+    <form onSubmit={handleProductRegister} className='w-[90%] max-w-sm mt-8'>
       <div className='flex flex-col space-y-4'>
         <label htmlFor='image' className='text-[#955764] text-sm font-medium'>
           Imagem
@@ -79,6 +95,7 @@ export default function Home() {
           Nome do Produto
         </label>
         <input
+          required
           type='text'
           id='productName'
           className='bg-[#f8f5f1] text-black rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#955764]'
@@ -90,6 +107,7 @@ export default function Home() {
           Preço
         </label>
         <input
+          required
           type='text'
           id='price'
           className='bg-[#f8f5f1] text-black rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#955764]'
@@ -101,12 +119,14 @@ export default function Home() {
           Categoria
         </label>
         <select
+          required
           id='category'
           className='bg-[#f8f5f1] text-black rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#955764]'
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value=''>Selecione a categoria</option>
+          <option value='26c280db-c100-45ab-87b0-7e1ddb0e63e8'>vestido</option>
         </select>
         <label htmlFor='description' className='text-[#955764] text-sm font-medium'>
           Descrição
