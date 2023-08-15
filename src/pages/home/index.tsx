@@ -104,7 +104,7 @@ export default function ProductManagement() {
                             </Link>
                         </li>
                         <li>
-                            <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/nova-categoria'>
+                            <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/categories'>
                                 <RiAddBoxLine className='mr-2' /> Crie uma Nova Categoria
                             </Link>
                         </li>
