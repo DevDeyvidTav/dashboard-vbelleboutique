@@ -3,6 +3,8 @@ import { createProduct } from '@/useCases/product';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { RiImageAddLine } from 'react-icons/ri';
 
@@ -15,6 +17,7 @@ export default function Home() {
   const [imagePreview, setImagePreview] = useState<string>();
   const [imgUrl, setImgUrl] = useState("")
   const [progress, setProgress] = useState(0)
+  const router = useRouter(); // Inicializando o useRouter
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -145,6 +148,13 @@ export default function Home() {
       >
         Cadastrar Produto
       </button>
+      <button
+          type='button'
+          onClick={() => router.push('/home')} // Redirecionando para '/home' ao clicar
+          className='bg-[#784d60] text-white rounded-md w-full py-2 mt-2 focus:outline-none hover:bg-[#6e4252] transition-colors duration-300 ease-in-out'
+        >
+          Voltar
+        </button>
     </form>
   </main>
   );
