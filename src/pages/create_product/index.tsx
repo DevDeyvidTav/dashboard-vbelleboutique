@@ -1,23 +1,30 @@
 import { storage } from '@/lib/firebase';
 import { createProduct } from '@/useCases/product';
+import axios from 'axios';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RiImageAddLine } from 'react-icons/ri';
+import { toast } from 'react-toastify';
+
+type Category = {
+  id: string,
+  name: string
+}
 
 const montSerrat = Montserrat({ subsets: ['latin'] });
 export default function Home() {
+  const [categories, setCategories] = useState<Category[]>();
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('26c280db-c100-45ab-87b0-7e1ddb0e63e8');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [description, setDescription] = useState('');
   const [imagePreview, setImagePreview] = useState<string>();
   const [imgUrl, setImgUrl] = useState("")
   const [progress, setProgress] = useState(0)
-  const router = useRouter(); // Inicializando o useRouter
+  const router = useRouter();
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -52,23 +59,46 @@ export default function Home() {
       }
     )
   }
- 
+  async function getCategories(){
+    try {
+      const response = await axios.get('/api/get_categories')
+      const data = await response.data
+      setCategories(data)
+
+    } catch (error) {
+      
+    }
+  }
+ useEffect(() => {
+  if (!categories){
+    getCategories()
+  }
+ },[])
   const handleProductRegister = async (e: any) => {
     e.preventDefault()
     handleUpload(e)
     if (!imagePreview) {
-      alert ('por favor, selecione uma imagem para o produto')
+      toast.error ('por favor, selecione uma imagem para o produto')
+    }
+    if (selectedCategory === undefined) {
+      toast.error ('por favor, selecione uma imagem para o produto')
     }
     const product = {
       name: productName,
       imageUrl: imgUrl,
       description: description,
       price: Number(price),
-      categoryId: category
+      categoryId: selectedCategory
     }
    if (imgUrl) {
-    const response = await createProduct(product)
-    return response
+    try {
+      const response = await createProduct(product)
+      toast.success('Produto cadastrado com sucesso!')
+      router.push('/home')
+      return response
+    } catch (error) {
+      console.error(error)
+    }
   }
   }
   return (
@@ -125,11 +155,15 @@ export default function Home() {
           required
           id='category'
           className='bg-[#f8f5f1] text-black rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-[#955764]'
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
         >
           <option value=''>Selecione a categoria</option>
-          <option value='26c280db-c100-45ab-87b0-7e1ddb0e63e8'>vestido</option>
+          {categories?.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
         </select>
         <label htmlFor='description' className='text-[#955764] text-sm font-medium'>
           Descrição

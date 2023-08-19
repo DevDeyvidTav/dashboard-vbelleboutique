@@ -1,17 +1,28 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const CategoryForm = () => {
   const [categoryName, setCategoryName] = useState('');
   const router = useRouter();
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // Aqui você pode adicionar a lógica para enviar os dados da categoria para o backend
-    // Por exemplo, chamar uma função de criação de categoria
+    try {
+      const response = await axios.post('/api/category', {
+        name: categoryName,
+      })
+      router.push('/categories');
+      toast.success("Categoria cadastrada com sucesso!")
+      return response.data
 
-    // Após cadastrar, redirecionar para a página desejada
-    router.push('/categorias');
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      }
+    }
+    
   };
 
   return (

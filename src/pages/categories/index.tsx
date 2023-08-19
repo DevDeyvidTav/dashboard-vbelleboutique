@@ -1,21 +1,36 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
+type Category = {
+  id: string,
+  name: string
+}
 const CategoryList = () => {
-  const [categories, setCategories] = useState([
-    { id: '1', name: 'Vestidos' },
-    { id: '2', name: 'Blusas' },
-    { id: '3', name: 'Saias' },
-    { id: '4', name: 'Acessórios' },
-  ]);
+  const [categories, setCategories] = useState<Category[]>();
   const router = useRouter();
-
+  async function getCategories() {
+    try {
+      const response = await axios.get('/api/get_categories')
+      const data = await response.data
+      setCategories(data)
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      }
+    }
+  }
+  useEffect(() => {
+    if (!categories){
+      getCategories()
+    }
+  }, [])
   return (
     <div className='bg-[#f0e7db] min-h-screen flex flex-col justify-center items-center'>
       <div className='bg-white p-6 rounded-md shadow-md w-[90%] max-w-md'>
         <h2 className='text-[#955764] text-2xl font-bold mb-4'>Lista de Categorias</h2>
         <ul className='text-[#955764] space-y-2'>
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <li key={category.id}>
               <button
                 onClick={() => router.push(`/categorias/${category.id}`)} // Redirecionar para a página de detalhes da categoria
