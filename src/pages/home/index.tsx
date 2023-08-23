@@ -98,7 +98,7 @@ export default function ProductManagement() {
                     <div className='flex flex-wrap justify-center gap-4  overflow-x-auto'>
                         {products?.map((product) => (
                             <div key={product.id} className='w-64 bg-white rounded-md shadow-md'>
-                                <Image className='w-full h-48 object-cover rounded-t-md' width={200}  height={200} src={product.imageUrl} alt={product.name} />
+                                <Image className='w-full h-48 object-cover rounded-t-md' width={200}   height={200} src={product.imageUrl} alt={product.name} />
                                 <div className='p-4'>
                                     <h3 className='text-lg font-bold text-[#955764]'>{product.name}</h3>
                                     <p className='text-[#955764]'>{product.price}</p>
@@ -132,7 +132,7 @@ export default function ProductManagement() {
                             </Link>
                         </li>
                         <li>
-                            <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/estoque'>
+                            <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/stock'>
                                 <RiStockLine className='mr-2' /> Estoque
                             </Link>
                         </li>
