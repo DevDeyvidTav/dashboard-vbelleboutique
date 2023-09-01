@@ -25,6 +25,7 @@ export default function Home() {
   const [imgUrl, setImgUrl] = useState("")
   const [progress, setProgress] = useState(0)
   const router = useRouter();
+  const [loading, setLoading] = useState(false)
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -33,9 +34,9 @@ export default function Home() {
     }
   };
 
-  const handleUpload = (e: any) => {
+  const handleUpload = async(e: any) => {
     e.preventDefault()
-
+    setLoading(true)
     const file = e.target[0]?.files[0]
     if (!file) return
 
@@ -53,9 +54,30 @@ export default function Home() {
         alert(error)
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
           setImgUrl(downloadURL)
-        })
+          const product = {
+            name: productName,
+            imageUrl: downloadURL,
+            description: description,
+            price: Number(price),
+            categoryId: selectedCategory
+          }
+
+          
+            try {
+              console.log("imagem hospedada em:", downloadURL)
+              const response = await createProduct(product)
+              return response
+            } catch (error) {
+              console.error(error)
+            }finally {
+              toast.success('Produto cadastrado com sucesso!')
+              router.push('/home')
+              setLoading(false)
+            }
+          }
+        )
       }
     )
   }
@@ -74,39 +96,13 @@ export default function Home() {
     getCategories()
   }
  },[])
-  const handleProductRegister = async (e: any) => {
-    e.preventDefault()
-    handleUpload(e)
-    if (!imagePreview) {
-      toast.error ('por favor, selecione uma imagem para o produto')
-    }
-    if (selectedCategory === undefined) {
-      toast.error ('por favor, selecione uma imagem para o produto')
-    }
-    const product = {
-      name: productName,
-      imageUrl: imgUrl,
-      description: description,
-      price: Number(price),
-      categoryId: selectedCategory
-    }
-   if (imgUrl) {
-    try {
-      const response = await createProduct(product)
-      toast.success('Produto cadastrado com sucesso!')
-      router.push('/home')
-      return response
-    } catch (error) {
-      console.error(error)
-    }
-  }
-  }
+
   return (
     <main className={`bg-[#f0e7db] min-h-screen flex flex-col justify-center items-center ${montSerrat.className}`}>
     <div className='flex flex-col items-center space-y-8'>
       <h2 className='text-[#955764] text-2xl font-bold mb-4 uppercase'>Cadastro de Produtos</h2>
     </div>
-    <form onSubmit={handleProductRegister} className='w-[90%] max-w-sm mt-8'>
+    <form onSubmit={handleUpload} className='w-[90%] max-w-sm mt-8'>
       <div className='flex flex-col space-y-4'>
         <label htmlFor='image' className='text-[#955764] text-sm font-medium'>
           Imagem
@@ -180,7 +176,7 @@ export default function Home() {
         type='submit'
         className='bg-[#955764] text-white rounded-md w-full py-2 mt-4 focus:outline-none hover:bg-[#784d60] transition-colors duration-300 ease-in-out'
       >
-        Cadastrar Produto
+        {loading ? <div className="h-8 w-8 mx-auto border-4 border-l-transparent border-b-transparent border-r-zinc-900 border-t-zinc-900 animate-spin ease-linear rounded-full "> </div> : 'Cadastrar'}
       </button>
       <button
           type='button'

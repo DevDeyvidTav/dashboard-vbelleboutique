@@ -2,19 +2,19 @@ import { Aside } from '@/components/Aside';
 import { StockModal } from '@/components/stockModal';
 import { Dialog } from '@radix-ui/themes';
 import axios from 'axios';
-import { GetServerSideProps } from 'next';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FiLogOut, FiSearch } from 'react-icons/fi';
-import { RiEdit2Line, RiAddBoxFill, RiCloseLine, RiMenuLine, RiAddCircleLine, RiStockLine, RiAddBoxLine } from 'react-icons/ri';
+import {  RiAddBoxFill, RiCloseLine, RiMenuLine, RiAddCircleLine, RiStockLine, RiAddBoxLine } from 'react-icons/ri';
 
 type Product = {
-    id: string,
-    name: string,
+    id?: string,
+    name?: string,
     imageUrl: string,
-    description: string,
-    price: number
+    description?: string,
+    price?: number
 }
 
 type Category = {
@@ -23,11 +23,13 @@ type Category = {
 }
 
 export default function StockManagement() {
+    const [selectedProduct, setSelectedProduct] = useState<Product>();
     const [categories, setCategories] = useState<Category[]>()
     const [products, setProducts] = useState<Product[]>();
     const [selectedCategory, setSelectedCategory] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const productImage = selectedProduct ? selectedProduct.imageUrl : "/logo.png";
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -74,7 +76,7 @@ export default function StockManagement() {
 
     return (
         <Dialog.Root>
-            <StockModal />
+            <StockModal imageUrl={productImage} name={selectedProduct?.name} id={selectedProduct?.id} description={selectedProduct?.description} />
             <main className={`bg-[#f0e7db] min-h-screen max-w-full w-screen`}>
                 <header className='lg:hidden z-50 bg-white fixed w-full p-4 shadow-md flex justify-between items-center'>
                     <h2 className='text-[#955764] text-lg font-bold'>V Belle Boutique</h2>
@@ -124,7 +126,7 @@ export default function StockManagement() {
                         <div className='flex flex-wrap justify-center gap-4 overflow-x-auto'>
                             {products?.map((product) => (
                                 <div key={product.id} className='w-64 bg-white rounded-md shadow-md'>
-                                    <Image className='w-full h-48 object-cover rounded-t-md' width={200} height={200} src={product.imageUrl} alt={product.name} />
+                                    <Image className='w-full h-48 object-cover rounded-t-md' width={200} height={200} src={product.imageUrl} alt={'Produto'} />
                                     <div className='p-4'>
                                         <h3 className='text-lg font-bold text-[#955764]'>{product.name}</h3>
                                         <p className='text-[#955764]'>R$ {product.price}</p>
@@ -133,6 +135,7 @@ export default function StockManagement() {
                                     <div className='flex justify-end p-2'>
                                         <Dialog.Trigger>
                                             <button
+                                                onClick={() => setSelectedProduct(product)}
                                                 className='text-[#955764] hover:text-[#784d60] transition-colors duration-300'
                                                 title='Editar'
                                             >
