@@ -1,13 +1,15 @@
 import { Aside } from '@/components/Aside';
-import { StockModal } from '@/components/stockModal';
-import { Dialog } from '@radix-ui/themes';
+import { EditProductModal } from '@/components/editProductModal';
+import { AlertDialog, Dialog } from '@radix-ui/themes';
 import axios from 'axios';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FiLogOut, FiSearch } from 'react-icons/fi';
-import {  RiAddBoxFill, RiCloseLine, RiMenuLine, RiAddCircleLine, RiStockLine, RiAddBoxLine } from 'react-icons/ri';
+import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
+import { RiAddBoxFill, RiCloseLine, RiMenuLine, RiAddCircleLine, RiStockLine, RiAddBoxLine } from 'react-icons/ri';
+import { DeleteProductDialog } from '@/components/deleteProductDialog';
 
 type Product = {
     id?: string,
@@ -73,112 +75,117 @@ export default function StockManagement() {
     }, [selectedCategory, searchQuery])
 
 
-
     return (
         <Dialog.Root>
-            <StockModal imageUrl={productImage} name={selectedProduct?.name} id={selectedProduct?.id} description={selectedProduct?.description} />
-            <main className={`bg-[#f0e7db] min-h-screen max-w-full w-screen`}>
-                <header className='lg:hidden z-50 bg-white fixed w-full p-4 shadow-md flex justify-between items-center'>
-                    <h2 className='text-[#955764] text-lg font-bold'>V Belle Boutique</h2>
-                    <button
-                        className='text-[#955764] hover:text-[#784d60] transition-colors duration-300'
-                        onClick={toggleMenu}
-                    >
-                        {isMenuOpen ? <RiCloseLine /> : <RiMenuLine />}
-                    </button>
-                </header>
-                <div className='flex flex-col lg:flex-row'>
-                    <Aside />
-                    <section className={`lg:w-3/4 flex flex-col items-center space-y-8 p-4 lg:ml-1/4 lg:mr-4 ${isMenuOpen ? 'lg:ml-0' : ''}`}>
-                        <h2 className='text-3xl font-bold text-[#955764] mt-14'>Controle de Produtos</h2>
-                        <div className='flex flex-col-reverse  items-center mt-10 gap-4 p-4'>
-                            <div className='flex gap-2 items-center'>
-                                <label className='text-[#955764]'>Filtrar por Categoria:</label>
-                                <select
-                                    className='bg-white rounded-md px-2  py-1 focus:outline-none focus:ring focus:border-[#955764]'
-                                    value={selectedCategory}
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
-                                >
-                                    <option value="">
-                                        Todos
-                                    </option>
-                                    {categories?.map((category) => (
-                                        <option key={category.id} value={category.id}>
-                                            {category.name}
+            <AlertDialog.Root>
+                <EditProductModal price={selectedProduct?.price} imageUrl={productImage} name={selectedProduct?.name} id={selectedProduct?.id} description={selectedProduct?.description} />
+                <main className={`bg-[#f0e7db] min-h-screen max-w-full w-screen`}>
+                    <header className='lg:hidden z-50 bg-white fixed w-full p-4 shadow-md flex justify-between items-center'>
+                        <h2 className='text-[#955764] text-lg font-bold'>V Belle Boutique</h2>
+                        <button
+                            className='text-[#955764] hover:text-[#784d60] transition-colors duration-300'
+                            onClick={toggleMenu}
+                        >
+                            {isMenuOpen ? <RiCloseLine /> : <RiMenuLine />}
+                        </button>
+                    </header>
+                    <div className='flex flex-col lg:flex-row'>
+                        <Aside />
+                        <section className={`lg:w-3/4 flex flex-col items-center space-y-8 p-4 lg:ml-1/4 lg:mr-4 ${isMenuOpen ? 'lg:ml-0' : ''}`}>
+                            <h2 className='text-3xl font-bold text-[#955764] mt-14'>Controle de Produtos</h2>
+                            <div className='flex flex-col-reverse  items-center mt-10 gap-4 p-4'>
+                                <div className='flex gap-2 items-center'>
+                                    <label className='text-[#955764]'>Filtrar por Categoria:</label>
+                                    <select
+                                        className='bg-white rounded-md px-2  py-1 focus:outline-none focus:ring focus:border-[#955764]'
+                                        value={selectedCategory}
+                                        onChange={(e) => setSelectedCategory(e.target.value)}
+                                    >
+                                        <option value="">
+                                            Todos
                                         </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className='relative'>
-                                <input
-                                    type='text'
-                                    placeholder='Pesquisar'
-                                    className='bg-[#f8f5f1] text-black rounded-md py-1 px-3 focus:outline-none focus:ring-2 focus:ring-[#955764]'
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                                <span className='absolute right-3 top-1/2 transform -translate-y-1/2'>
-                                    <FiSearch />
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className='flex flex-wrap justify-center gap-4 overflow-x-auto'>
-                            {products?.map((product) => (
-                                <div key={product.id} className='w-64 bg-white rounded-md shadow-md'>
-                                    <Image className='w-full h-48 object-cover rounded-t-md' width={200} height={200} src={product.imageUrl} alt={'Produto'} />
-                                    <div className='p-4'>
-                                        <h3 className='text-lg font-bold text-[#955764]'>{product.name}</h3>
-                                        <p className='text-[#955764]'>R$ {product.price}</p>
-                                        <p className='text-gray-500'>{product.description}</p>
-                                    </div>
-                                    <div className='flex justify-end p-2'>
-                                        <Dialog.Trigger>
-                                            <button
-                                                onClick={() => setSelectedProduct(product)}
-                                                className='text-[#955764] hover:text-[#784d60] transition-colors duration-300'
-                                                title='Editar'
-                                            >
-                                                <RiAddBoxFill />
-                                            </button>
-                                        </Dialog.Trigger>
-
-
-                                    </div>
+                                        {categories?.map((category) => (
+                                            <option key={category.id} value={category.id}>
+                                                {category.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
-                            ))}
-                        </div>
-                    </section>
+                                <div className='relative'>
+                                    <input
+                                        type='text'
+                                        placeholder='Pesquisar'
+                                        className='bg-[#f8f5f1] text-black rounded-md py-1 px-3 focus:outline-none focus:ring-2 focus:ring-[#955764]'
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                    <span className='absolute right-3 top-1/2 transform -translate-y-1/2'>
+                                        <FiSearch />
+                                    </span>
+                                </div>
+                            </div>
 
-                    <aside className={`lg:hidden w-full h-screen ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} bg-white p-4 fixed top-16 left-0 shadow-md transition-transform duration-500 ease-in-out`}>
-                        <ul className='text-[#955764] space-y-2'>
-                            <li>
-                                <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/create_product'>
-                                    <RiAddCircleLine className='mr-2' /> Cadastre um Produto
-                                </Link>
-                            </li>
-                            <li>
-                                <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/stock'>
-                                    <RiStockLine className='mr-2' /> Estoque
-                                </Link>
-                            </li>
-                            <li>
-                                <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/categories'>
-                                    <RiAddBoxLine className='mr-2' /> Crie uma Nova Categoria
-                                </Link>
-                            </li>
-                        </ul>
-                        <div className='mt-auto'>
-                            <button className='flex items-center hover:text-red-500 transition-colors duration-300'>
-                                <FiLogOut className='mr-2' /> Encerrar Sessão
-                            </button>
-                        </div>
-                    </aside>
+                            <div className='flex flex-wrap justify-center gap-4 overflow-x-auto'>
+                                {products?.map((product) => (
+                                    <div key={product.id} className='w-64 bg-white rounded-md shadow-md'>
+                                        <Image className='w-full h-48 object-cover rounded-t-md' width={200} height={200} src={product.imageUrl} alt={'Produto'} />
+                                        <div className='p-4'>
+                                            <h3 className='text-lg font-bold text-[#955764]'>{product.name}</h3>
+                                            <p className='text-[#955764]'>R$ {product.price}</p>
+                                            <p className='text-gray-500'>{product.description}</p>
+                                        </div>
+                                        <div className='flex justify-end p-2'>
+                                            <Dialog.Trigger>
+                                                <button
+                                                    onClick={() => setSelectedProduct(product)}
+                                                    className='text-[#955764] hover:text-[#784d60] transition-colors duration-300'
+                                                    title='Editar'
+                                                >
+                                                    <AiFillEdit />
+                                                </button>
+                                            </Dialog.Trigger>
+                                            <AlertDialog.Trigger>
+                                                <button onClick={() => setSelectedProduct(product)}>
+                                                    < AiFillDelete className='text-[#955764] hover:text-[#784d60] transition-colors duration-300' />
+                                                </button>
+                                            </AlertDialog.Trigger>
 
-                </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
 
-            </main>
+                        <aside className={`lg:hidden w-full h-screen ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} bg-white p-4 fixed top-16 left-0 shadow-md transition-transform duration-500 ease-in-out`}>
+                            <ul className='text-[#955764] space-y-2'>
+                                <li>
+                                    <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/create_product'>
+                                        <RiAddCircleLine className='mr-2' /> Cadastre um Produto
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/stock'>
+                                        <RiStockLine className='mr-2' /> Estoque
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/categories'>
+                                        <RiAddBoxLine className='mr-2' /> Crie uma Nova Categoria
+                                    </Link>
+                                </li>
+                            </ul>
+                            <div className='mt-auto'>
+                                <button className='flex items-center hover:text-red-500 transition-colors duration-300'>
+                                    <FiLogOut className='mr-2' /> Encerrar Sessão
+                                </button>
+                            </div>
+                        </aside>
 
+                    </div>
+
+                </main>
+                <DeleteProductDialog id={selectedProduct?.id} />
+            </AlertDialog.Root>
         </Dialog.Root>
     );
 }

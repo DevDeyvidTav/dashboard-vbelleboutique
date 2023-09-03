@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { AiFillDelete } from 'react-icons/ai';
 
 type Category = {
   id: string,
@@ -31,13 +32,15 @@ const CategoryList = () => {
         <h2 className='text-[#955764] text-2xl font-bold mb-4'>Lista de Categorias</h2>
         <ul className='text-[#955764] space-y-2'>
           {categories?.map((category) => (
-            <li key={category.id}>
-              <button
-                onClick={() => router.push(`/categorias/${category.id}`)} // Redirecionar para a página de detalhes da categoria
+            <li className='flex' key={category.id}>
+              <p
+                // Redirecionar para a página de detalhes da categoria
                 className='w-full text-left hover:text-[#784d60] transition-colors duration-300'
               >
                 {category.name}
-              </button>
+
+              </p>
+              <AiFillDelete/>
             </li>
           ))}
         </ul>

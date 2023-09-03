@@ -28,11 +28,7 @@ export function StockModal(product: Product) {
             </div>
             <div>
                 <StockTable id={Id} />
-                <div className="flex justify-center items-center gap-2 mt-6">
-                    <Button
-                        color="pink">
-                        <BiMessageRoundedAdd /> Adicionar novo tamanho
-                    </Button>
+                <div className="flex justify-center items-center  mt-6">
                     <DialogClose>
                         <Button variant="soft" color="pink">
                             Fechar
