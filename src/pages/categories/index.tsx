@@ -32,26 +32,23 @@ const CategoryList = () => {
         <h2 className='text-[#955764] text-2xl font-bold mb-4'>Lista de Categorias</h2>
         <ul className='text-[#955764] space-y-2'>
           {categories?.map((category) => (
-            <li className='flex' key={category.id}>
+            <li  key={category.id}>
               <p
-                // Redirecionar para a página de detalhes da categoria
                 className='w-full text-left hover:text-[#784d60] transition-colors duration-300'
               >
                 {category.name}
-
               </p>
-              <AiFillDelete/>
             </li>
           ))}
         </ul>
         <button
-          onClick={() => router.push('/categories/create')} // Redirecionar para a página de cadastro de categoria
+          onClick={() => router.push('/categories/create')} 
           className='bg-[#955764] text-white rounded-md w-full py-2 mt-4 focus:outline-none hover:bg-[#784d60] transition-colors duration-300 ease-in-out'
         >
           Cadastrar Nova Categoria
         </button>
         <button
-          onClick={() => router.push('/home')} // Redirecionar para a página de cadastro de categoria
+          onClick={() => router.push('/home')}
           className='bg-[#955764] text-white rounded-md w-full py-2 mt-4 focus:outline-none hover:bg-[#784d60] transition-colors duration-300 ease-in-out'
         >
           Voltar

@@ -38,7 +38,11 @@ export default function Home() {
     e.preventDefault()
     setLoading(true)
     const file = e.target[0]?.files[0]
-    if (!file) return
+    if (!file) {
+      toast.error('Por favor, selecione uma imagem')
+      setLoading(false)
+      return
+    }
 
     const storageRef = ref(storage, `images/${file.name}`)
 
@@ -55,7 +59,6 @@ export default function Home() {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
-          setImgUrl(downloadURL)
           const product = {
             name: productName,
             imageUrl: downloadURL,
@@ -66,7 +69,7 @@ export default function Home() {
 
           
             try {
-              console.log("imagem hospedada em:", downloadURL)
+
               const response = await createProduct(product)
               return response
             } catch (error) {

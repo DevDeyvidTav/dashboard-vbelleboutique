@@ -5,9 +5,11 @@ import axios from 'axios';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { AiFillShop } from 'react-icons/ai';
 import { FiLogOut, FiSearch } from 'react-icons/fi';
-import {  RiAddBoxFill, RiCloseLine, RiMenuLine, RiAddCircleLine, RiStockLine, RiAddBoxLine } from 'react-icons/ri';
+import { RiAddBoxFill, RiCloseLine, RiMenuLine, RiAddCircleLine, RiStockLine, RiAddBoxLine } from 'react-icons/ri';
 
 type Product = {
     id?: string,
@@ -71,7 +73,7 @@ export default function StockManagement() {
     useEffect(() => {
         getProducts()
     }, [selectedCategory, searchQuery])
-
+    const router = useRouter()
 
 
     return (
@@ -150,8 +152,13 @@ export default function StockManagement() {
                         </div>
                     </section>
 
-                    <aside className={`lg:hidden w-full h-screen ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} bg-white p-4 fixed top-16 left-0 shadow-md transition-transform duration-500 ease-in-out`}>
+                    <aside className={`lg:hidden w-3/4 flex flex-col h-screen ${isMenuOpen ? 'translate-x-0 shadow-2xl shadow-black' : '-translate-x-full'} bg-white p-4 justify-between fixed top-16 left-0  transition-transform duration-500 ease-in-out`}>
                         <ul className='text-[#955764] space-y-2'>
+                            <li>
+                                <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/home'>
+                                    <AiFillShop className='mr-2' /> Controle de produtos
+                                </Link>
+                            </li>
                             <li>
                                 <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/create_product'>
                                     <RiAddCircleLine className='mr-2' /> Cadastre um Produto
@@ -168,13 +175,12 @@ export default function StockManagement() {
                                 </Link>
                             </li>
                         </ul>
-                        <div className='mt-auto'>
-                            <button className='flex items-center hover:text-red-500 transition-colors duration-300'>
-                                <FiLogOut className='mr-2' /> Encerrar Sessão
-                            </button>
-                        </div>
+                        <button 
+                        onClick={() => router.push('/')}
+                        className='flex items-center mb-16 text-[#955764] hover:text-red-500  transition-colors duration-300'>
+                            <FiLogOut className='mr-2' /> Encerrar Sessão
+                        </button>
                     </aside>
-
                 </div>
 
             </main>
