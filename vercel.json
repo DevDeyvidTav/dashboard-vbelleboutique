@@ -1,21 +1,27 @@
 {
-    "build": {
-      "env": {
-        "VERCEL": "1",
-        "DATABASE_URL": "postgres://vbelleboutique2023:tJW4QNhc1fUS@ep-rapid-dawn-73414116.us-east-2.aws.neon.tech/neondb"
-      },
-      "commands": [
-        {
-          "command": "npm",
-          "use": "vercel-build",
-          "args": ["run", "build"]
-        },
-        {
-          "command": "npm",
-          "use": "vercel-build",
-          "args": ["run", "prisma:generate"]
+    "builds": [
+      {
+        "src": "seu_diretorio_de_build",
+        "use": "vercel-build",
+        "config": {
+          "env": {
+            "VERCEL": "1",
+            "DATABASE_URL": "sua_url_de_banco_de_dados"
+          }
         }
-      ]
-    }
+      },
+      {
+        "src": "seu_diretorio_de_prisma_generate",
+        "use": "vercel-build",
+        "config": {
+          "env": {
+            "VERCEL": "1",
+            "DATABASE_URL": "sua_url_de_banco_de_dados"
+          },
+          "projectRoot": "./seu_diretorio_de_projeto"
+        }
+      }
+    ],
+    "version": 2
   }
   
