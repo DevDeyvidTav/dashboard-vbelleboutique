@@ -1,4 +1,5 @@
 import axios from "axios"
+import { toast } from "react-toastify"
 
 export interface Product {
     name: string,
@@ -16,6 +17,11 @@ export async function createProduct(product: Product){
     } catch (error) {
         if (error instanceof axios.AxiosError) {
             console.error(error.response?.data.message)
+            toast.error(error.response?.data.message)
+        }
+        if (error instanceof Error) {
+            console.error(error.message)
+            toast.error(error.message)
         }
     }
 }

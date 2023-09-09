@@ -131,7 +131,7 @@ export default function StockManagement() {
                                     <Image className='w-full h-48 object-cover rounded-t-md' width={200} height={200} src={product.imageUrl} alt={'Produto'} />
                                     <div className='p-4'>
                                         <h3 className='text-lg font-bold text-[#955764]'>{product.name}</h3>
-                                        <p className='text-[#955764]'>R$ {product.price}</p>
+                                        <p className='text-[#955764]'>R$ {product.price && product.price.toFixed(2)}</p>
                                         <p className='text-gray-500'>{product.description}</p>
                                     </div>
                                     <div className='flex justify-end p-2'>

@@ -130,7 +130,7 @@ export function EditProductModal(product: Product) {
                     </div>
                 ) : (
                     <div className="flex items-center cursor-pointer" onClick={() => handleEditSelectedProduct(3, 'price')}>
-                        <p className="font-bold text-[#955764]">R$ {newPrice ? newPrice : product.price}</p>
+                        <p className="font-bold text-[#955764]">R$ {newPrice ? newPrice.toFixed(2) : product.price && product.price.toFixed(2)}</p>
                         <AiOutlineEdit className="ml-2 cursor-pointer text-gray-500" />
                     </div>
                 )}
