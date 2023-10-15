@@ -10,7 +10,6 @@ export default async function handler(
     throw new Error('Método não permitido')
   }
   const producu_id = String(req.query.productId)
-
   try {
     const response = await prisma.product.findUnique({
       where: {

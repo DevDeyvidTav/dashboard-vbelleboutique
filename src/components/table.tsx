@@ -8,7 +8,7 @@ type Stock = {
   size: string;
   amount: number;
 };
-
+console.log
 export function StockTable(id: any) {
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [editingStock, setEditingStock] = useState<Stock | null>(null);
@@ -19,7 +19,7 @@ export function StockTable(id: any) {
   const [newAmount, setNewAmount] = useState(0);
 
 
-  const handleDelete = async(id: string) => {
+  const handleDelete = async (id: string) => {
     try {
       const response = await axios.delete('/api/delete_stock', {
         params: {
@@ -31,15 +31,18 @@ export function StockTable(id: any) {
       if (error instanceof Error) {
         console.error(error.message)
       }
-      
+
     } finally {
       getStocks()
     }
   }
+
   const handleEditClick = (stockId: string) => {
     const stockToEdit = stocks.find((stock) => stock.id === stockId);
     if (stockToEdit) {
       setEditingStock(stockToEdit);
+      setEditedAmount(stockToEdit.amount);
+      setEditedSize(stockToEdit.size);
     }
   };
   async function getStocks() {
@@ -85,6 +88,7 @@ export function StockTable(id: any) {
 
   const handleAddClick = () => {
     setShowAddForm(true);
+
   };
 
   const handleAddFormSubmit = async () => {
@@ -132,13 +136,18 @@ export function StockTable(id: any) {
             </Table.RowHeaderCell>
             <Table.Cell>
               <input
-                type="number"
+                type="text" 
                 value={editedAmount}
-                onChange={(e) => setEditedAmount(Number(e.target.value))}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (!isNaN(Number(value))) {
+                    setEditedAmount(Number(value));
+                  }
+                }}
                 className="w-full p-1"
               />
             </Table.Cell>
-            <Table.Cell>
+            <Table.Cell className="flex gap-2">
               <Button
                 color="green"
                 className="flex items-center p-1"
@@ -148,7 +157,7 @@ export function StockTable(id: any) {
               </Button>
               <Button
                 color="red"
-                className="flex items-center p-1"
+                className="flex items-center p-1 "
                 onClick={handleCancelClick}
               >
                 <BiX />
@@ -169,7 +178,7 @@ export function StockTable(id: any) {
                   <BiEdit />
                 </Button>
                 <Button
-                onClick={() => handleDelete(stock.id)}
+                  onClick={() => handleDelete(stock.id)}
                   color="red"
                   className="flex items-center p-1"
 
@@ -193,13 +202,19 @@ export function StockTable(id: any) {
             </Table.RowHeaderCell>
             <Table.Cell>
               <input
-                type="number"
+                type="text"
                 value={newAmount}
-                onChange={(e) => setNewAmount(Number(e.target.value))}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (!isNaN(Number(value))) {
+                    setNewAmount(Number(value));
+                  }
+                }}
                 className="w-full p-1"
+                inputMode="numeric"
               />
             </Table.Cell>
-            <Table.Cell>
+            <Table.Cell className="flex gap-1">
               <Button
                 color="green"
                 className="flex items-center p-1"
