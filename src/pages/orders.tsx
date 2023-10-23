@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { RiCloseLine, RiMenuLine } from 'react-icons/ri';
 import Link from 'next/link';
 import axios from 'axios';
 
@@ -44,7 +43,7 @@ export default function DeliveryOrders() {
       const data = response.data;
 
       // Mapeie os dados para o formato desejado
-      const formattedOrders = data.map((order: Order) => ({
+      const formattedOrders = data.map((order: any) => ({
         id: order.id,
         details: JSON.parse(order.orderDetail),
       }));
