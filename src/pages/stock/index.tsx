@@ -174,6 +174,11 @@ export default function StockManagement() {
                                     <RiAddBoxLine className='mr-2' /> Crie uma Nova Categoria
                                 </Link>
                             </li>
+                            <li>
+                                <Link className='flex items-center hover:text-[#784d60] transition-colors duration-300' href='/orders'>
+                                    <RiAddBoxLine className='mr-2' /> acompanhe os pedidos
+                                </Link>
+                            </li>
                         </ul>
                         <button 
                         onClick={() => router.push('/')}
