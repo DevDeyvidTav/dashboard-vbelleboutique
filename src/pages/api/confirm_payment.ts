@@ -7,17 +7,19 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'POST') {
+  if (req.method !== 'PUT') {
     throw new Error('Método não permitido')
   }
-  const { Details} = req.body
+  const { id } = req.body
   try {
-    const response = await prisma.order.create({
+    const response = await prisma.order.update({
         data: {
-            delivery: false,
-             orderDetail: Details,
-             payment: false,
+             payment: true,
+        },
+        where: {
+            id: id
         }
+        
     })
     return res.status(201).json(response)
   }
