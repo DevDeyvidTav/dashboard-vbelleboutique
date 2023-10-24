@@ -14,8 +14,7 @@ export default async function handler(
         const response = await prisma.order.findMany({
             where: {
                 delivery: false,
-                payment: false
-            }
+                payment: true            }
         })
     return res.status(200).json(response)
   }
