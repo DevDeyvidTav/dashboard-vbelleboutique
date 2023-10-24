@@ -27,6 +27,7 @@ type Product = {
   price: number;
   quantity: number;
   imageUrl: string;
+  size: string;
 };
 
 export default function DeliveryOrders() {
@@ -86,7 +87,7 @@ export default function DeliveryOrders() {
               alt={product.name}
               className="w-12 h-12 object-cover mr-4"
             />
-            {product.name} - Quantidade: {product.quantity} - Preço: R${product.price.toFixed(2)}
+            {product.name} - Quantidade: {product.quantity} - Preço: R${product.price.toFixed(2)} - Tamanho: {product.size}
           </div>
         </li>
       ))}
