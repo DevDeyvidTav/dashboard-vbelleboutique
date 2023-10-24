@@ -7,7 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'PUT') {
+  if (req.method !== 'POST') {
     throw new Error('Método não permitido')
   }
   const { id } = req.body
