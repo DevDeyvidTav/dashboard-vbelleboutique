@@ -10,14 +10,14 @@ export default async function handler(
   if (req.method !== 'POST') {
     throw new Error('Método não permitido')
   }
-  const { id } = req.body
+  const { id } = req.query
   try {
     const response = await prisma.order.update({
         data: {
              payment: true,
         },
         where: {
-            id: id
+            id: String(id)
         }
         
     })
